@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appointment-CELL_ID
+  namespace: appointment-system
+  labels:
+    app: appointment-service
+    cell: CELL_ID
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appointment-service
+      cell: CELL_ID
+  template:
+    metadata:
+      labels:
+        app: appointment-service
+        cell: CELL_ID
+    spec:
+      containers:
+      - name: service
+        image: appointment-service:dev
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3001
+        env:
+        - name: CELL_ID
+          value: "CELL_ID_VALUE"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appointment-CELL_ID
+  namespace: appointment-system
+spec:
+  selector:
+    app: appointment-service
+    cell: CELL_ID
+  ports:
+  - port: 3001
+    targetPort: 3001
