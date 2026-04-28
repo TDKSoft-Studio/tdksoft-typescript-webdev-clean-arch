@@ -76,8 +76,8 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
           tags: |
             type=semver,pattern={{version}}
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,format=short,prefix=
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -129,7 +129,6 @@ jobs:
 
       - name: Deploy cells to production
         run: |
-          # Deploy 2 cells for 2-node VPS
           for cell in cell-001 cell-002; do
             echo "Deploying $cell..."
             sed "s/CELL_ID/${cell}/g; s/CELL_ID_VALUE/${cell}/g" \
@@ -145,9 +144,6 @@ jobs:
         run: |
           echo "=== Pods status ==="
           kubectl get pods -n ${{ env.NAMESPACE }} -o wide
-
-          echo "=== Cells status ==="
-          kubectl get cells -n ${{ env.NAMESPACE }}
 
       - name: Health check validation
         run: |
