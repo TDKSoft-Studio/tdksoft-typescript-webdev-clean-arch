@@ -1,0 +1,71 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: cells.architecture.tdk.io
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  group: architecture.tdk.io
+  names:
+    kind: Cell
+    plural: cells
+    singular: cell
+    shortNames:
+    - cl
+  scope: Namespaced
+  preserveUnknownFields: false
+  versions:
+  - name: v1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            required:
+            - cellId
+            - environment
+            properties:
+              cellId:
+                type: string
+                pattern: '^cell-[0-9]{3}$'
+              environment:
+                type: string
+                enum: [dev, staging, prod]
+              capacity:
+                type: object
+                properties:
+                  maxRequestsPerSecond:
+                    type: integer
+                    default: 1000
+                  maxConcurrentConnections:
+                    type: integer
+                    default: 200
+              isolation:
+                type: object
+                properties:
+                  cpu:
+                    type: string
+                    default: "1000m"
+                  memory:
+                    type: string
+                    default: "2Gi"
+              routing:
+                type: object
+                properties:
+                  shardingKey:
+                    type: string
+                    enum: [patient_id, doctor_id]
+                    default: patient_id
+          status:
+            type: object
+            properties:
+              phase:
+                type: string
+                enum: [Pending, Ready, Degraded, Failed]
+              healthScore:
+                type: number
+              activePartitions:
+                type: integer
