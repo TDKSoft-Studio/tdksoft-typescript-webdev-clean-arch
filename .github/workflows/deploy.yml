@@ -5,70 +5,50 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Target environment'
-        type: choice
-        options:
-          - production
-          - staging
-        default: production
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    name: Deploy to Kubernetes
-    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
+      
       - name: Install kubectl
-        uses: azure/setup-kubectl@v4
-        with:
-          version: 'latest'
-
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+          kubectl version --client
+      
       - name: Setup kubeconfig
         run: |
           mkdir -p $HOME/.kube
           echo "${{ secrets.KUBE_CONFIG_PROD }}" | base64 -d > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
-
+      
       - name: Verify cluster
         run: |
           kubectl cluster-info
           kubectl get nodes
-
-      - name: Deploy to cluster
+      
+      - name: Deploy cells
         run: |
-          # Créer le namespace
           kubectl create namespace appointment-system --dry-run=client -o yaml | kubectl apply -f -
-          
-          # Appliquer le CRD
           kubectl apply -f infrastructure/k8s/cells/crd/cell-crd.yaml || true
           
-          # Déployer les cells (2 pour prod)
           for cell in cell-001 cell-002; do
             echo "Deploying $cell..."
             sed "s/CELL_ID/${cell}/g; s/CELL_ID_VALUE/${cell}/g" \
               infrastructure/k8s/cells/base/cell-dev.yaml | kubectl apply -f -
           done
           
-          # Attendre que les pods soient prêts
           sleep 10
           kubectl wait --for=condition=ready pod -n appointment-system --all --timeout=120s || true
-          
-          # Afficher le statut
           kubectl get pods -n appointment-system
-          kubectl get svc -n appointment-system
-
+      
       - name: Health check
         run: |
-          kubectl run test --image=curlimages/curl -it --rm --restart=Never \
+          kubectl run health-check --image=curlimages/curl -it --rm --restart=Never \
             -n appointment-system -- curl -s http://appointment-cell-001:3001/health || true
-
-      - name: Deployment status
-        run: |
-          echo "✅ Deployment completed successfully!"
-          echo "📦 Version: ${{ github.ref_name }}"
-          echo "🌍 Environment: ${{ github.event.inputs.environment || 'production' }}"
+      
+      - name: Success
+        run: echo "✅ Deployment completed successfully!"
