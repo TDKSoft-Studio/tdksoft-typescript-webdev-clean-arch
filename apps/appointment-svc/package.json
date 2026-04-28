@@ -19,3 +19,12 @@
     "typescript": "^5.3.3"
   }
 }
+
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "tsx watch src/main.ts",
+    "lint": "eslint src --ext .ts",
+    "test": "echo \"No tests yet\" && exit 0",
+    "type-check": "tsc --noEmit"
+  }
