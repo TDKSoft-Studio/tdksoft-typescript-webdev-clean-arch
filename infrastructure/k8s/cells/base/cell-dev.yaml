@@ -26,9 +26,7 @@ spec:
         - containerPort: 3001
         env:
         - name: CELL_ID
-          value: "CELL_ID"
-        - name: NODE_ENV
-          value: "development"
+          value: "CELL_ID_VALUE"
         resources:
           requests:
             memory: "256Mi"
