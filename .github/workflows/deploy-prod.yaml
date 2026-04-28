@@ -110,7 +110,12 @@ jobs:
       - name: Configure Kubeconfig
         run: |
           mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONFIG_PROD }}" | base64 -d > $HOME/.kube/config
+          # Support both raw and base64 encoded kubeconfig
+          if echo "${{ secrets.KUBE_CONFIG_PROD }}" | base64 -d 2>/dev/null > /dev/null; then
+            echo "${{ secrets.KUBE_CONFIG_PROD }}" | base64 -d > $HOME/.kube/config
+          else
+            echo "${{ secrets.KUBE_CONFIG_PROD }}" > $HOME/.kube/config
+          fi
           chmod 600 $HOME/.kube/config
 
       - name: Verify cluster connection
