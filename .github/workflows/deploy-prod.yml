@@ -20,7 +20,7 @@ env:
   NAMESPACE: appointment-system
 
 jobs:
-  # Job 1: Tests et validation
+  # Job 1: Validation
   validate:
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +47,7 @@ jobs:
           cd apps/appointment-svc
           npm test 2>/dev/null || echo "No test script"
 
-  # Job 2: Scan de sécurité
+  # 2- Security Check
   security:
     runs-on: ubuntu-latest
     needs: validate
@@ -71,7 +71,7 @@ jobs:
           args: --severity-threshold=high
         continue-on-error: true
 
-  # Job 3: Build et push Docker image
+  # Job 3: Build and  push Docker image
   build:
     runs-on: ubuntu-latest
     needs: security
@@ -114,7 +114,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # Job 4: Déploiement sur VPS
+  # Job 4: Déploiement on VPS
   deploy:
     runs-on: ubuntu-latest
     needs: build
