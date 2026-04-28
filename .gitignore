@@ -1,0 +1,145 @@
+# ============================================
+# TDK DEV TEMPLATE - PROFESSIONAL .gitignore
+# ============================================
+
+# OS & Editors
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.sublime-*
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.turbo/
+.nx/
+
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+secrets/
+.vault-token
+.aws/
+.gcloud/
+.azure/
+*.service-account.json
+
+# Logs & Audits
+logs/
+*.log
+audit-logs/
+phi-audit-*.log
+patient-data-access-*.json
+
+# Application data (PHI/PII)
+*.dump.sql
+patient-data/
+medical-records/
+financial-transactions/
+test-data/
+fixtures/patient-*.json
+
+# Kubernetes secrets
+*.secret.yaml
+secrets.enc.yaml
+*-sa-key.json
+
+# Terraform
+terraform/
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+crash.log
+
+# CI/CD secrets
+.github/secrets/
+.gitlab/secrets/
+*.token
+*.accesstoken
+
+# Testing
+coverage/
+.nyc_output/
+test-results/
+junit.xml
+.cypress-cache/
+cypress/videos/
+playwright-report/
+
+# Database
+*.sql
+*.sql.gz
+*.pgdump
+*.backup
+prisma/*.db
+prisma/*.sqlite
+dump.rdb
+
+# Docker
+docker-compose.override.yml
+*.dockerignore
+volumes/
+
+# ML Models (large files)
+*.pkl
+*.h5
+*.pb
+*.onnx
+models/
+!models/README.md
+
+# Temporary files
+tmp/
+temp/
+.cache/
+.temp
+*.tmp
+
+# Security reports
+security-reports/
+vulnerability-reports/
+*.snyk-report
+trivy-results/
+
+# Backups
+*.bak
+*.backup
+*.old
+*.orig
+
+# Service specific
+apps/appointment-svc/temp/
+apps/user-svc/phi-data/
+apps/user-svc/gdpr-exports/
+apps/payment-svc/card-data/
+apps/notification-svc/email-attachments/
+apps/api-gateway/certs/
+
+# Package locks
+ package-lock.json
+ yarn.lock
+ pnpm-lock.yaml
+
+# Generated docs
+docs/api/
+docs/generated/
+fixtures/patient-*.json
+**/fixtures/patient-*.json

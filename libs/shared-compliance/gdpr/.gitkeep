@@ -1,0 +1,19 @@
+# ~/.gitignore_global - Configuration globale pour l'ordinateur
+
+# Local development secrets
+~/.ssh/id_rsa*
+~/.aws/credentials
+~/.config/gcloud/
+~/.docker/config.json
+~/.kube/config
+~/.minikube/
+~/.terraform.d/
+
+# Shell history (contains commands with secrets)
+~/.bash_history
+~/.zsh_history
+~/.history
+
+# IDE global
+~/Library/Preferences/
+~/Library/Caches/

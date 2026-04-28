@@ -1,0 +1,14 @@
+{
+  "name": "tdk-dev-template",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "turbo": "latest",
+    "nx": "latest",
+    "typescript": "latest",
+    "prettier": "latest"
+  }
+}
