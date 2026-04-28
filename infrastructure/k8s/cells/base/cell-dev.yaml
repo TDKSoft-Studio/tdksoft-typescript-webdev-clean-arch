@@ -51,6 +51,8 @@ spec:
           value: CELL_ID
         - name: NODE_ENV
           value: "development"
+        - name: PORT
+          value: "3001"
         resources:
           requests:
             memory: "256Mi"
@@ -66,7 +68,7 @@ spec:
           periodSeconds: 20
         readinessProbe:
           httpGet:
-            path: /health
+            path: /ready
             port: 3001
           initialDelaySeconds: 5
           periodSeconds: 10
